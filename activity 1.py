@@ -3,6 +3,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+# X = (hours sleeping, hours studying), y = Score on test
+X = np.array(([3, 5], [5, 1], [10, 2]), dtype=float)
+y = np.array(([75], [82], [93]), dtype=float)
+
+# Normalize
+X = X/np.amax(X, axis=0)
+y = y/100 #Max test score is 100
+
+
 class Neural_Object(object):
 
     def __init__(self):
@@ -47,11 +56,20 @@ class Neural_Object(object):
 
         return dJdW1, dJdW2
 
+    def testHelperFunction(self):
+        print("Weight Matrix 1 =\n", self.W1)
+        print("Weight Matrix 2 =\n", self.W2)
+        param = np.concatenate((self.W1.ravel(), self.W2.ravel()))
+        print("Concatenate =\n", param)
+        W1_start = 0
+        W1_end = self.hiddenLayerSize * self.inputLayerSize
+        self.W1 = np.reshape(param[W1_start:W1_end], (self.inputLayerSize, self.hiddenLayerSize))
+        print("Reshaped W1 =\n", self.W1)
 
 
 
-
-
+NN = Neural_Object()
+NN.testHelperFunction()
 
 
 
@@ -72,4 +90,14 @@ plt.plot([4, 5, 6, 7])
 plt.title('line Graph 2/2')
 
 plt.show()
+
+
+
+NN = Neural_Object()
+cost1 = NN.costFunction(X, y)
+dJdW1, dJdW2 = NN.costFunctionPrime(X, y)
+print("Cost 1 =", cost1, "\n")
+print("dJdW1 =\n", dJdW1, "\n")
+print("dJdW2 =\n", dJdW2, "\n")
+
 '''
