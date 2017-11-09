@@ -9,7 +9,7 @@ y = np.array(([75], [82], [93]), dtype=float)  # 3x1
 
 # Normalize
 X = X/np.amax(X, axis=0)
-y = y/100 #Max test score is 100
+y = y/100  # Max test score is 100
 
 
 class Neural_Object(object):
@@ -43,8 +43,9 @@ class Neural_Object(object):
     # Compute cost for given X,y, use weights already stored in class.
     def costFunction(self, X, y):
         self.yHat = self.forward(X)
-        J = 0.5 * sum((y - self.yHat) ** 2)
-        return J
+        # sum finds the norm of the column vectors of y and yHat
+        cost = 0.5 * sum((y - self.yHat) ** 2)
+        return cost
 
     # derivative of cost function respect to weight 2 n 1
     def costFunctionPrime(self, X, y):
@@ -67,11 +68,12 @@ class Neural_Object(object):
         self.W1 = np.reshape(param[W1_start:W1_end], (self.inputLayerSize, self.hiddenLayerSize))
         print("Reshaped W1 =\n", self.W1)
 
-a = np.reshape([1, 2, 3], (3, 1))
 
-print("y= \n", y,"\n yHat= \n", self.yHat)
-J = 0.5 * sum((y - self.yHat) ** 2)
-print(J)
+aTest = np.reshape([1, 2, 3], (3, 1))
+bTest = np.reshape([2, 3, 4], (3, 1))
+
+print("a= \n", aTest, "\nb= \n", bTest)
+print("\n", sum(bTest - aTest))
 
 
 
