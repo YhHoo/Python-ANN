@@ -1,11 +1,11 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-
+from scipy import optimize
 
 # X = (hours sleeping, hours studying), y = Score on test
-X = np.array(([3, 5], [5, 1], [10, 2]), dtype=float)
-y = np.array(([75], [82], [93]), dtype=float)
+X = np.array(([3, 5], [5, 1], [10, 2]), dtype=float)  # 3x2
+y = np.array(([75], [82], [93]), dtype=float)  # 3x1
 
 # Normalize
 X = X/np.amax(X, axis=0)
@@ -16,12 +16,13 @@ class Neural_Object(object):
 
     def __init__(self):
         self.inputLayerSize = 2
-        self.outputLayerSize = 1
         self.hiddenLayerSize = 3
+        self.outputLayerSize = 1
+
 
         # Weights Matrix btw layers
-        self.W1 = np.random.randn(self.inputLayerSize, self.hiddenLayerSize)
-        self.W2 = np.random.randn(self.hiddenLayerSize, self.outputLayerSize)
+        self.W1 = np.random.randn(self.inputLayerSize, self.hiddenLayerSize)  # 2x3
+        self.W2 = np.random.randn(self.hiddenLayerSize, self.outputLayerSize)  # 3x1
 
     @staticmethod
     def sigmoid(z):
@@ -29,10 +30,10 @@ class Neural_Object(object):
 
     # propagate the inputs through the network
     def forward(self, X):
-        self.z2 = np.dot(X, self.W1)
-        self.a1 = self.sigmoid(self.z2)
-        self.z3 = np.dot(self.z2, self.W2)
-        yHat = self.sigmoid(self.z3)
+        self.z2 = np.dot(X, self.W1)  # 3x3
+        self.a2 = self.sigmoid(self.z2)  # 3x3
+        self.z3 = np.dot(self.a2, self.W2)  # 3x1
+        yHat = self.sigmoid(self.z3)  # 3x1
         return yHat
 
     # derivative of sigmoid function
@@ -66,10 +67,11 @@ class Neural_Object(object):
         self.W1 = np.reshape(param[W1_start:W1_end], (self.inputLayerSize, self.hiddenLayerSize))
         print("Reshaped W1 =\n", self.W1)
 
+a = np.reshape([1, 2, 3], (3, 1))
 
-
-NN = Neural_Object()
-NN.testHelperFunction()
+print("y= \n", y,"\n yHat= \n", self.yHat)
+J = 0.5 * sum((y - self.yHat) ** 2)
+print(J)
 
 
 
