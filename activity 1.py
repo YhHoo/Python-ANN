@@ -58,22 +58,76 @@ class Neural_Object(object):
 
         return dJdW1, dJdW2
 
-    def testHelperFunction(self):
-        print("Weight Matrix 1 =\n", self.W1)
-        print("Weight Matrix 2 =\n", self.W2)
-        param = np.concatenate((self.W1.ravel(), self.W2.ravel()))
-        print("Concatenate =\n", param)
+    # helper function of getParams(), setParams() and unrollGradients()
+    def getParams(self):
+        # Unroll the current weight matrix and save into a list
+        params = np.concatenate((self.W1.ravel(), self.W2.ravel()))
+        return params
+
+    def setParams(self, params):
         W1_start = 0
-        W1_end = self.hiddenLayerSize * self.inputLayerSize
-        self.W1 = np.reshape(param[W1_start:W1_end], (self.inputLayerSize, self.hiddenLayerSize))
-        print("Reshaped W1 =\n", self.W1)
+        W1_end = self.inputLayerSize * self.hiddenLayerSize
+        W2_end = W1_end + self.hiddenLayerSize * self.outputLayerSize
+        self.W1 = np.reshape(params[W1_start:W1_end], (self.inputLayerSize, self.hiddenLayerSize))
+        self.W2 = np.reshape(params[W1_end:W2_end], (self.hiddenLayerSize, self.outputLayerSize))
+
+    def unrollGradient(self, X, y):
+        dJdW1, dJdW2 = self.costFunctionPrime(X, y)
+        return np.concatenate((dJdW1.ravel(), dJdW2.ravel()))
 
 
-aTest = np.reshape([1, 2, 3], (3, 1))
-bTest = np.reshape([2, 3, 4], (3, 1))
+class Training(object):
+    def __init__(self, N):
+        # make a reference to the ANN object
+        self.N = N
+        self.J = []
 
-print("a= \n", aTest, "\nb= \n", bTest)
-print("\n", sum(bTest - aTest))
+    # update the network weights and the append the cost to J list
+    def callbackF(self, params):
+        self.N.setParams(params)
+        self.J.append(self.N.costFunction(self.N.X, self.N.y)) # MODIFIED
+
+    def costFunctionWrapper(self, params, X, y):
+        self.N.setParams(params)
+        cost = self.N.costFunction(X, y)
+        grad = self.N.unrollGradient(X, y)
+
+        return  cost, grad
+
+    def train(self, X, y):
+        # Make an internal variable for the callback function:
+        self.X = X
+        self.y = y
+
+        # Make empty list to store costs:
+        self.J = []
+
+        params0 = self.N.getParams()
+
+        options = {'maxiter': 200, 'disp': True}
+        _res = optimize.minimize(self.costFunctionWrapper, params0, jac=True, method='BFGS',
+                                 args=(X, y), options=options, callback=self.callbackF)
+
+        self.N.setParams(_res.x)
+        self.optimizationResults = _res
+
+        NN = Neural_Object()
+        T = trainer(NN)
+        T.train(X, y)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
