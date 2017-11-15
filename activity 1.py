@@ -51,7 +51,7 @@ class Neural_Object(object):
     def costFunctionPrime(self, X, y):
         self.yHat = self.forward(X)
         delta3 = np.multiply(-(y - self.yHat), self.sigmoidPrime(self.z3))
-        dJdW2 = np.dot(self.a1.T, delta3)
+        dJdW2 = np.dot(self.a2.T, delta3)
 
         delta2 = np.dot(delta3, self.W2.T)*self.sigmoidPrime(self.z2)
         dJdW1 = np.dot(X.T, delta2)
@@ -76,7 +76,7 @@ class Neural_Object(object):
         return np.concatenate((dJdW1.ravel(), dJdW2.ravel()))
 
 
-class Training(object):
+class Trainer(object):
     def __init__(self, N):
         # make a reference to the ANN object
         self.N = N
@@ -85,14 +85,14 @@ class Training(object):
     # update the network weights and the append the cost to J list
     def callbackF(self, params):
         self.N.setParams(params)
-        self.J.append(self.N.costFunction(self.N.X, self.N.y)) # MODIFIED
+        self.J.append(self.N.costFunction(self.X, self.y))  # MODIFIED
 
     def costFunctionWrapper(self, params, X, y):
         self.N.setParams(params)
         cost = self.N.costFunction(X, y)
         grad = self.N.unrollGradient(X, y)
 
-        return  cost, grad
+        return cost, grad
 
     def train(self, X, y):
         # Make an internal variable for the callback function:
@@ -111,9 +111,23 @@ class Training(object):
         self.N.setParams(_res.x)
         self.optimizationResults = _res
 
-        NN = Neural_Object()
-        T = trainer(NN)
-        T.train(X, y)
+
+NN = Neural_Object()
+T = Trainer(NN)
+T.train(X, y)
+
+scorePrediction = NN.forward(X)
+print('\nPredicted Score =\n', scorePrediction)
+print('\nIdeal Score =\n', y)
+
+plt.plot(T.J)
+plt.grid(True)
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
+plt.show()
+
+
+
 
 
 
