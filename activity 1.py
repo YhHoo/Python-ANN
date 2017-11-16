@@ -131,14 +131,18 @@ print("\nOptimized Weights 1:\n", NN.W1)
 print("\nOptimized Weights 2:\n", NN.W2)
 
 
+userInput = input("Do you want to save the weights?(y/n): ")
 
-# userInput = input("Do you want to save the weights?(y/n): ")
-#
-# if userInput is "y" or "Y":
-#     with open("weights.txt", "w") as f:
-#         for w in weight:
-#             f.write(str(w) + "\n")
-#     print("Saved ! \n")
+if userInput is "y" or "Y":
+    with open("weights.txt", "w") as f:
+        for w in NN.W1.flatten():
+            f.write(str(w) + "\n")
+    print("Saved ! \n")
+else:
+    print("Weights Discarded !\n")
+
+
+
 
 
 
