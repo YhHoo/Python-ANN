@@ -120,12 +120,25 @@ scorePrediction = NN.forward(X)
 print('\nPredicted Score =\n', scorePrediction)
 print('\nIdeal Score =\n', y)
 
+# showing graphs of cost vs iterations
 plt.plot(T.J)
 plt.grid(True)
 plt.xlabel('Iterations')
 plt.ylabel('Cost')
 plt.show()
 
+print("\nOptimized Weights 1:\n", NN.W1)
+print("\nOptimized Weights 2:\n", NN.W2)
+
+
+
+# userInput = input("Do you want to save the weights?(y/n): ")
+#
+# if userInput is "y" or "Y":
+#     with open("weights.txt", "w") as f:
+#         for w in weight:
+#             f.write(str(w) + "\n")
+#     print("Saved ! \n")
 
 
 
