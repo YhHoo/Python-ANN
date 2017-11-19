@@ -1,6 +1,7 @@
 import numpy as np
 from activity_1 import Neural_Object
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 import matplotlib.pyplot as plt
 
 temp = []  # to store the weights
@@ -66,7 +67,7 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 
 surf = ax.plot_surface(xx, yy, 100*allOutputs.reshape(100, 100),
-                       cmap='jet')
+                       cmap=cm.jet)
 
 ax.set_xlabel('Hours Sleep')
 ax.set_ylabel('Hours Study')
