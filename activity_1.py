@@ -82,11 +82,13 @@ class Trainer(object):
         self.N = N
         self.J = []
 
-    # update the network weights and the append the cost to J list
+    # update the network weights and then append the cost to J list
     def callbackF(self, params):
         self.N.setParams(params)
         self.J.append(self.N.costFunction(self.X, self.y))  # MODIFIED
 
+    # cost function that accept weights , input and output.
+    # and output cost and gradient as a list
     def costFunctionWrapper(self, params, X, y):
         self.N.setParams(params)
         cost = self.N.costFunction(X, y)
@@ -94,55 +96,60 @@ class Trainer(object):
 
         return cost, grad
 
+    # Make an internal variable for the callback function:
     def train(self, X, y):
-        # Make an internal variable for the callback function:
+
         self.X = X
         self.y = y
 
         # Make empty list to store costs:
         self.J = []
 
+        # store the current weight matrix
         params0 = self.N.getParams()
 
         options = {'maxiter': 200, 'disp': True}
         _res = optimize.minimize(self.costFunctionWrapper, params0, jac=True, method='BFGS',
                                  args=(X, y), options=options, callback=self.callbackF)
-
-        self.N.setParams(_res.x)
+        self.N.setParams(_res.x)  # res.x returns the optimized W
         self.optimizationResults = _res
 
 
-NN = Neural_Object()
-T = Trainer(NN)
-T.train(X, y)
+# this is to prevent the code fr here onwards is executed when
+# this file is imported as a module
+if __name__ == '__main__':
 
-scorePrediction = NN.forward(X)
-print('\nPredicted Score =\n', scorePrediction)
-print('\nIdeal Score =\n', y)
+    NN = Neural_Object()
+    T = Trainer(NN)
+    T.train(X, y)
 
-# showing graphs of cost vs iterations
-plt.plot(T.J)
-plt.grid(True)
-plt.xlabel('Iterations')
-plt.ylabel('Cost')
-plt.show()
+    scorePrediction = NN.forward(X)
+    print('\nPredicted Score =\n', scorePrediction)
+    print('\nIdeal Score =\n', y)
 
-print("\nOptimized Weights 1:\n", NN.W1)
-print("\nOptimized Weights 2:\n", NN.W2)
+    # showing graphs of cost vs iterations
+    # plt.plot(T.J)
+    # plt.grid(True)
+    # plt.xlabel('Iterations')
+    # plt.ylabel('Cost')
+    # plt.show()
+
+    print("\nOptimized Weights 1:\n", NN.W1)
+    print("\nOptimized Weights 2:\n", NN.W2)
 
 
-userInput = input("Do you want to save the weights?(y/n): ")
+    userInput = input("Do you want to save the weights?(y/n): ")
 
-if userInput is 'y' or userInput is 'Y':
-    with open("weights.txt", "w") as f:
-        for w in NN.W1.flatten():
-            f.write(str(w) + "\n")
-    with open("weights2.txt", "w") as f:
-        for w in NN.W2.flatten():
-            f.write(str(w) + "\n")
-    print("Saved ! \n")
-else:
-    print("Weights Discarded !\n")
+    if userInput is 'y' or userInput is 'Y':
+        with open("weights.txt", "w") as f:
+            for w in NN.W1.flatten():
+                f.write(str(w) + "\n")
+        with open("weights2.txt", "w") as f:
+            for w in NN.W2.flatten():
+                f.write(str(w) + "\n")
+        print("Saved ! \n")
+    else:
+        print("Weights Discarded !\n")
 
 
 

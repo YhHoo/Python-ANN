@@ -1,8 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from activity_1 import Neural_Object
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
-import matplotlib.pyplot as plt
 
 temp = []  # to store the weights
 
